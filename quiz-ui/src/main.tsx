@@ -17,7 +17,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <ChakraProvider theme={theme} >
     <BrowserRouter>
       <NavBar />
-      <Box p={2} >
+      <Box maxW='3xl' p={2} margin='auto' >
        <AllRoutes />
       </Box>
     </BrowserRouter>

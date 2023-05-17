@@ -3,6 +3,7 @@ import {CiTimer} from 'react-icons/ci'
 import {BsQuestionCircle} from 'react-icons/bs'
 import { CiMedal  } from 'react-icons/ci'
 import { Box, Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, Text } from "@chakra-ui/react";
+import { useNavigate } from 'react-router-dom';
 
 type props = {
     isOpen: boolean,
@@ -10,6 +11,9 @@ type props = {
 }
 
 const DrawerCompnent:React.FC<props> = ({isOpen,onClose}) => {
+
+    const navigate = useNavigate();
+
   return (
     <Drawer
       isOpen={isOpen}
@@ -52,7 +56,7 @@ const DrawerCompnent:React.FC<props> = ({isOpen,onClose}) => {
             </Box>
         </DrawerBody>
         <DrawerFooter>
-          <Button color='white' display='block' margin='auto' rounded='full' bgColor='primary' >start</Button>
+       <Button onClick={()=>navigate('/quiz/react')} color='white' display='block' margin='auto' rounded='full' bgColor='primary' >start</Button> 
         </DrawerFooter>
       </DrawerContent>
     </Drawer>

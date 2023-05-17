@@ -19,8 +19,8 @@ const TrendQuizCard = () => {
             <Box  boxShadow='lg' rounded='3xl' mt='20px' >
                 <Text bgColor='primary' roundedTop='3xl' p={2} color='white' fontWeight='bold' >React Js Quiz</Text>
                     <Box  p={3} >
-                        <Image rounded='2xl' height='200px' w='100%' src={reactimage} display='block' margin='auto' />
-                        <Text>
+                        <Image rounded='2xl' height={{base:'200px' , md:"300px"}} w='100%' src={reactimage} display='block' margin='auto' />
+                        <Text mt='20px' >
                         React. js framework used for building interactive user interfaces and web applications quickly and efficiently with significantly less code than you would with vanilla JavaScript
                         </Text>
                         <Text fontWeight='bold' mt='10px' >This Quiz Includes:</Text>
