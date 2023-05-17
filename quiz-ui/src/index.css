@@ -3,3 +3,9 @@
   margin: 0;
   box-sizing: border-box;
 }
+
+:root {
+  --primary-color:#A459D1;
+  --white-color:#fff;
+  --grey--color:#CFD2CF;
+}
