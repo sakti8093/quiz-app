@@ -29,7 +29,7 @@ const Quiz = () => {
     score: 0,
   });
 
-  const [timeLeft, setTimeLeft] = useState<number>(180);
+  const [timeLeft, setTimeLeft] = useState<number>(60);
 
   useEffect(() => {
     if (option === "react") {
@@ -82,15 +82,28 @@ const Quiz = () => {
 
   return (
     <Box height="100vh">
-      <Box p={2} display="flex" alignItems="center" justifyContent="space-between">
+      <Box
+        p={2}
+        display="flex"
+        alignItems="center"
+        justifyContent="space-between"
+      >
         <Text>
           {store.currentQuestion + 1} / {store.questions.length}
         </Text>
-        <Text fontWeight='bold' rounded='full' bgColor='green' p='0 20px' color='white' >
+        <Text
+          fontWeight="bold"
+          rounded="full"
+          bgColor="green"
+          p="0 20px"
+          color="white"
+        >
           {Math.floor(timeLeft / 60)}:{timeLeft % 60} m left
         </Text>
       </Box>
-      <Text fontSize='x-large' fontWeight='bold' >{store.questions[store.currentQuestion].question}</Text>
+      <Text fontSize="x-large" fontWeight="bold">
+        {store.questions[store.currentQuestion].question}
+      </Text>
       {store.questions[store.currentQuestion].options?.map((elem, index) => (
         <Box
           key={index}
