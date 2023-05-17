@@ -28,7 +28,9 @@ const Quiz = () => {
     selected: null,
     score: 0,
   });
-
+  
+  const { questions,currentQuestion,showScoreboard,selected,score } = store
+  
   const [timeLeft, setTimeLeft] = useState<number>(60);
 
   useEffect(() => {
@@ -48,6 +50,7 @@ const Quiz = () => {
     }, 1000);
 
     return () => clearTimeout(timer);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeLeft]);
 
   const handleSelectedOption = (index: number) => {
@@ -57,12 +60,12 @@ const Quiz = () => {
   const handleNextQuest = () => {
     setStore((prev) => {
       const updatedStore = { ...prev };
-      if (prev.currentQuestion + 1 <= prev.questions?.length - 1) {
+      if (prev.questions && prev.currentQuestion + 1 <= prev.questions.length - 1) {
         updatedStore.currentQuestion = prev.currentQuestion + 1;
       } else {
         updatedStore.showScoreboard = true;
       }
-      if (prev.selected === prev.questions[prev.currentQuestion].answer) {
+      if (prev.questions && prev.selected === prev.questions[prev.currentQuestion].answer) {
         updatedStore.score = updatedStore.score + 2;
       }
       updatedStore.selected = null;
@@ -70,13 +73,13 @@ const Quiz = () => {
     });
   };
 
-  if (store.showScoreboard) {
+  if (showScoreboard) {
     return (
-      <ScoreCard score={store.score} total={2 * store.questions?.length} />
+      <ScoreCard score={score} total={questions ? 2 * questions?.length : 0} />
     );
   }
 
-  if (!store.questions) {
+  if (!questions) {
     return null;
   }
 
@@ -89,7 +92,7 @@ const Quiz = () => {
         justifyContent="space-between"
       >
         <Text>
-          {store.currentQuestion + 1} / {store.questions.length}
+          {currentQuestion + 1} / {questions.length}
         </Text>
         <Text
           fontWeight="bold"
@@ -102,9 +105,9 @@ const Quiz = () => {
         </Text>
       </Box>
       <Text fontSize="x-large" fontWeight="bold">
-        {store.questions[store.currentQuestion].question}
+        { questions && questions[currentQuestion].question}
       </Text>
-      {store.questions[store.currentQuestion].options?.map((elem, index) => (
+      { questions && questions[currentQuestion].options?.map((elem, index) => (
         <Box
           key={index}
           p={4}
@@ -113,7 +116,7 @@ const Quiz = () => {
           boxShadow="rgba(99, 99, 99, 0.2) 0px 2px 8px 0px"
           onChange={() => handleSelectedOption(index)}
         >
-          <Checkbox value={index} isChecked={store.selected === index}>
+          <Checkbox value={index} isChecked={selected === index}>
             {elem}
           </Checkbox>
         </Box>
@@ -127,7 +130,7 @@ const Quiz = () => {
         colorScheme="teal"
         color="white"
       >
-        {store.currentQuestion === store.questions.length - 1
+        {currentQuestion === questions.length - 1
           ? "Submit"
           : "Next"}
       </Button>
