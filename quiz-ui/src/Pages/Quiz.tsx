@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import data from "../Data/data";
 import { Box, Button, Checkbox, Text } from "@chakra-ui/react";
@@ -18,8 +18,11 @@ type storeState = {
   score: number;
 };
 
+const timeGiven = 60;
+
 const Quiz = () => {
   const { option } = useParams();
+  const timeRef = useRef<number>();
 
   const [store, setStore] = useState<storeState>({
     questions: null,
@@ -28,10 +31,10 @@ const Quiz = () => {
     selected: null,
     score: 0,
   });
-  
-  const { questions,currentQuestion,showScoreboard,selected,score } = store
-  
-  const [timeLeft, setTimeLeft] = useState<number>(60);
+
+  const [timeLeft, setTimeLeft] = useState<number>(timeGiven);
+
+  const { questions, currentQuestion, showScoreboard, selected, score } = store;
 
   useEffect(() => {
     if (option === "react") {
@@ -45,12 +48,12 @@ const Quiz = () => {
       setStore({ ...store, showScoreboard: true });
       return;
     }
-    const timer = setTimeout(() => {
+    timeRef.current = setTimeout(() => {
       setTimeLeft(timeLeft - 1);
     }, 1000);
 
-    return () => clearTimeout(timer);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => clearTimeout(timeRef.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeLeft]);
 
   const handleSelectedOption = (index: number) => {
@@ -60,12 +63,19 @@ const Quiz = () => {
   const handleNextQuest = () => {
     setStore((prev) => {
       const updatedStore = { ...prev };
-      if (prev.questions && prev.currentQuestion + 1 <= prev.questions.length - 1) {
+      if (
+        prev.questions &&
+        prev.currentQuestion + 1 <= prev.questions.length - 1
+      ) {
         updatedStore.currentQuestion = prev.currentQuestion + 1;
       } else {
+        clearTimeout(timeRef.current);
         updatedStore.showScoreboard = true;
       }
-      if (prev.questions && prev.selected === prev.questions[prev.currentQuestion].answer) {
+      if (
+        prev.questions &&
+        prev.selected === prev.questions[prev.currentQuestion].answer
+      ) {
         updatedStore.score = updatedStore.score + 2;
       }
       updatedStore.selected = null;
@@ -75,7 +85,11 @@ const Quiz = () => {
 
   if (showScoreboard) {
     return (
-      <ScoreCard score={score} total={questions ? 2 * questions?.length : 0} />
+      <ScoreCard
+        score={score}
+        total={questions ? 2 * questions?.length : 0}
+        time={timeGiven - timeLeft}
+      />
     );
   }
 
@@ -101,26 +115,27 @@ const Quiz = () => {
           p="0 20px"
           color="white"
         >
-          {Math.floor(timeLeft / 60)}:{timeLeft % 60} m left
+          {Math.floor(timeLeft / 60)}m:{timeLeft % 60}s left
         </Text>
       </Box>
       <Text fontSize="x-large" fontWeight="bold">
-        { questions && questions[currentQuestion].question}
+        {questions && questions[currentQuestion].question}
       </Text>
-      { questions && questions[currentQuestion].options?.map((elem, index) => (
-        <Box
-          key={index}
-          p={4}
-          display="block"
-          mt="30px"
-          boxShadow="rgba(99, 99, 99, 0.2) 0px 2px 8px 0px"
-          onChange={() => handleSelectedOption(index)}
-        >
-          <Checkbox value={index} isChecked={selected === index}>
-            {elem}
-          </Checkbox>
-        </Box>
-      ))}
+      {questions &&
+        questions[currentQuestion].options?.map((elem, index) => (
+          <Box
+            key={index}
+            p={4}
+            display="block"
+            mt="30px"
+            boxShadow="rgba(99, 99, 99, 0.2) 0px 2px 8px 0px"
+            onChange={() => handleSelectedOption(index)}
+          >
+            <Checkbox value={index} isChecked={selected === index}>
+              {elem}
+            </Checkbox>
+          </Box>
+        ))}
       <Button
         display="block"
         onClick={() => handleNextQuest()}
@@ -130,9 +145,7 @@ const Quiz = () => {
         colorScheme="teal"
         color="white"
       >
-        {currentQuestion === questions.length - 1
-          ? "Submit"
-          : "Next"}
+        {currentQuestion === questions.length - 1 ? "Submit" : "Next"}
       </Button>
     </Box>
   );

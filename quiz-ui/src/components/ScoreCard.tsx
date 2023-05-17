@@ -5,8 +5,10 @@ import { useNavigate } from "react-router-dom";
 type props = {
   score: number;
   total: number;
+  time:number
 };
-const ScoreCard: React.FC<props> = ({ score, total }) => {
+const ScoreCard: React.FC<props> = ({ score, total, time }) => {
+  console.log(time,"time");
   const percentage = (score / total) * 100;
   const navigate = useNavigate();
 
@@ -32,6 +34,7 @@ const ScoreCard: React.FC<props> = ({ score, total }) => {
         {score}
       </Text>
       <Text> out of {total} </Text>
+      <Text> {Math.floor(time / 60)}m:{time % 60}s taken </Text>
       <Button
         mt="30px"
         variant="unstyled"
